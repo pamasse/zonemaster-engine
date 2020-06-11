@@ -14,7 +14,8 @@ RUN apt-get update --fix-missing -qq && apt-get install -qq \
     locales \
     libncurses5-dev \
     libreadline-dev \
-    libssl-dev
+    libssl-dev \
+    perl-CPAN 
 
 # Set the locale
 RUN echo "fr_FR.UTF-8 UTF-8" > /etc/locale.gen && \
@@ -33,7 +34,7 @@ RUN cpan install Module::Install Module::Install::XSUtil && \
 
     # Install Zonemaster ldns
 RUN git clone --depth=1 --branch=develop https://github.com/zonemaster/zonemaster-ldns.git && \
-    ( cd zonemaster-ldns && PERL_CPANM_OPT="--configure-args=--no-ed25519" cpan-install . ) && rm -rf zonemaster-ldns
+    ( cd zonemaster-ldns && PERL_CPANM_OPT="--configure-args=--no-ed25519" cpan install . ) && rm -rf zonemaster-ldns
 
 COPY . /zonemaster-engine
 WORKDIR zonemaster-engine
