@@ -11,6 +11,11 @@ jobs:
       - DISTRIBUTION=ubuntu
       - DISTRIBUTION_VERSION=18.04
       - DOCKERFILE=Dockerfile.debian.dev
+  - env: 
+      - DISTRIBUTION=ubuntu
+      - DISTRIBUTION_VERSION=16.04
+      - DOCKERFILE=Dockerfile.debian.dev
+
 
 before_script: #Here, we build all testing environments
     #Build image

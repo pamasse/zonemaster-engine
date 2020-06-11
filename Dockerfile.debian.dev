@@ -32,8 +32,8 @@ RUN cpan install Module::Install Module::Install::XSUtil && \
     cpan install Devel::OverloadInfo Moose
 
     # Install Zonemaster ldns
-RUN git clone --depth=1 --branch=develop https://github.com/zonemaster/zonemaster-ldns.git && cd zonemaster-ldns 
-RUN if [ "$IMAGE_NAME" = "ubuntu:18.04" ]; then \
+RUN git clone --depth=1 --branch=develop https://github.com/zonemaster/zonemaster-ldns.git && cd zonemaster-ldns && \
+    if [ "$IMAGE_NAME" = "ubuntu:18.04" ]; then \
         (cpan install . ); \
     else \
         ( PERL_CPANM_OPT="--configure-args=--no-ed25519" cpan install .  ); fi && \
