@@ -29,7 +29,7 @@ RUN apt-get install --no-install-recommends -qq gettext libgettextpo-dev  autoco
 # Zonemaster LDNS needs a newer version of Module::Install
 RUN cpan install Module::Install Module::Install::XSUtil && \
     # Moose installed from OS packages depend on a newer version of Devel::OverloadInfo
-    cpan install Devel::OverloadInfo Moose
+    cpan install Devel::OverloadInfo Moose Readonly
 
     # Install Zonemaster ldns
 RUN git clone --depth=1 --branch=develop https://github.com/zonemaster/zonemaster-ldns.git && cd zonemaster-ldns && \
