@@ -31,11 +31,11 @@ after_script:
 
 before_deploy:
     - docker login -u "$REGISTRY_USER" -p "$REGISTRY_PASS"
-    - docker tag "engine.dev.$DISTRIBUTION.$DISTRIBUTION_VERSION" "engine.dev.$DISTRIBUTION.$DISTRIBUTION_VERSION:latest"
+    - docker tag "engine.dev.$DISTRIBUTION.$DISTRIBUTION_VERSION" "$REGISTRY_USER/engine.dev.$DISTRIBUTION.$DISTRIBUTION_VERSION:latest"
     
 deploy:
   provider: script
-  script: docker push "engine.dev.$DISTRIBUTION.$DISTRIBUTION_VERSION:latest"
+  script: docker push "$REGISTRY_USER/engine.dev.$DISTRIBUTION.$DISTRIBUTION_VERSION:latest"
   on:
     branch: travis_ci_cd
 
