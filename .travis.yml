@@ -1,59 +1,23 @@
 language: perl
-perl:
-    - "5.30"
-    - "5.28"
-    - "5.26"
-    - "5.24"
-    - "5.22"
-    - "5.16"
+os:
+  - linux
 
-addons:
-  apt:
-    packages:
-        # From Zonemaster Engine installation instruction
-      - autoconf
-      - automake
-      - build-essential
-      - cpanminus
-      - libclone-perl
-      - libdevel-checklib-perl
-      - libfile-sharedir-perl
-      - libfile-slurp-perl
-      - libidn11-dev
-      - libintl-perl
-      - libjson-pp-perl
-      - liblist-moreutils-perl
-      - liblocale-msgfmt-perl
-      - libmodule-find-perl
-      - libnet-ip-perl
-      - libpod-coverage-perl
-      - libreadonly-xs-perl
-      - libssl-dev
-      - libtest-differences-perl
-      - libtest-exception-perl
-      - libtest-fatal-perl
-      - libtest-pod-perl
-      - libtext-csv-perl
-      - libtool
-      - m4
+sudo: required
+services: 
+  - docker
 
-before_install:
-      # Help Perl find modules installed from OS packages
-    - export PERL5LIB=/usr/share/perl5
+jobs:
+  include:
+  - env: 
+      - DISTRIBUTION=ubuntu
+      - DISTRIBUTION_VERSION=18.04
+      - DOCKERFILE=Dockerfile.debian.dev
 
-      # Provide cpanm helper
-    - eval $(curl https://travis-perl.github.io/init) --auto
+before_script: #Here, we build all testing environments
+    #Build image
+    - docker build -t engine.dev.$DISTRIBUTION.$DISTRIBUTION_VERSION -f $DOCKERFILE --build-arg IMAGE_NAME=$DISTRIBUTION:$DISTRIBUTION_VERSION .    
+    #Display images
+    - docker images -a
 
-      # Zonemaster LDNS needs a newer version of Module::Install
-    - cpan-install Module::Install Module::Install::XSUtil
-
-      # Moose installed from OS package depends on a newer version of Devel::OverloadInfo
-    - cpan-install Devel::OverloadInfo Moose
-
-      # Install Zonemaster LDNS
-    - git clone --depth=1 --branch=$TRAVIS_BRANCH https://github.com/zonemaster/zonemaster-ldns.git
-    - ( cd zonemaster-ldns && PERL_CPANM_OPT="--configure-args=--no-ed25519" cpan-install . ) && rm -rf zonemaster-ldns
-
-before_script:
-      # Run tests in the repo root, not TRAVIS_BUILD_DIR
-    - cd $HOME/build/zonemaster/zonemaster-engine
+script: #Here, we run tests on the container already build
+    - docker run engine.dev.$DISTRIBUTION.$DISTRIBUTION_VERSION /bin/sh -c "perl Makefile.PL && make test"; fi
