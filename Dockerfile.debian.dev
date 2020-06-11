@@ -32,7 +32,7 @@ RUN cpan install Module::Install Module::Install::XSUtil && \
     cpan install Devel::OverloadInfo Moose
 
     # Install Zonemaster ldns
-RUN git clone --depth=1 --branch=develop https://github.com/zonemaster/zonemaster-engine.git && \
+RUN git clone --depth=1 --branch=$TRAVIS_BRANCH https://github.com/zonemaster/zonemaster-ldns.git && \
     ( cd zonemaster-ldns && PERL_CPANM_OPT="--configure-args=--no-ed25519" cpan-install . ) && rm -rf zonemaster-ldns
 
 COPY . /zonemaster-engine
