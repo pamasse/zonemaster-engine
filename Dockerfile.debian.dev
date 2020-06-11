@@ -14,8 +14,7 @@ RUN apt-get update --fix-missing -qq && apt-get install -qq \
     locales \
     libncurses5-dev \
     libreadline-dev \
-    libssl-dev \
-    perl-CPAN 
+    libssl-dev
 
 # Set the locale
 RUN echo "fr_FR.UTF-8 UTF-8" > /etc/locale.gen && \
