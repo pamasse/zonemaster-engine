@@ -17,7 +17,22 @@ before_script: #Here, we build all testing environments
     #Build image
     - docker build -t engine.dev.$DISTRIBUTION.$DISTRIBUTION_VERSION -f $DOCKERFILE --build-arg IMAGE_NAME=$DISTRIBUTION:$DISTRIBUTION_VERSION .    
     #Display images
-    - docker images -a
+    - docker images
 
 script: #Here, we run tests on the container already build
-    - docker run engine.dev.$DISTRIBUTION.$DISTRIBUTION_VERSION /bin/sh -c "perl Makefile.PL && make test"; fi
+    - docker run engine.dev.$DISTRIBUTION.$DISTRIBUTION_VERSION /bin/sh -c "perl Makefile.PL && make test"
+    
+after_script:
+    - docker images
+
+before_deploy:
+    - docker login -u "$REGISTRY_USER" -p "$REGISTRY_PASS"
+    - docker tag "engine.dev.$DISTRIBUTION.$DISTRIBUTION_VERSION" "engine.dev.$DISTRIBUTION.$DISTRIBUTION_VERSION:latest"
+    
+deploy:
+  provider: script
+  script: docker push "engine.dev.$DISTRIBUTION.$DISTRIBUTION_VERSION:latest"
+  on:
+    branch: travis_ci_cd
+
+
